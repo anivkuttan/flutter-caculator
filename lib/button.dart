@@ -1,13 +1,8 @@
 import 'package:calculator_app/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-// enum ButtonType {
-//   numbers,
-//   operators,
-//   equal,
-//   ac,
-// }
+import 'controller.dart';
+import 'package:get/get.dart';
 
 class Button extends StatelessWidget {
   final String buttonName;
@@ -16,11 +11,14 @@ class Button extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ButtonController buttonController = Get.find();
     TextStyle buttonStyle = _getButtonStyle(buttonName);
     Color buttonColor = _getbuttonColor(buttonName);
     return Flexible(
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          buttonController.buttonTapped(buttonName);
+        },
         child: Container(
           height: 50,
           width: 60,

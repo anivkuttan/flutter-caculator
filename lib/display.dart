@@ -1,11 +1,14 @@
 import 'package:calculator_app/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'controller.dart';
 
 class Display extends StatelessWidget {
   const Display({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    ButtonController buttonController = Get.put(ButtonController());
     return Flexible(
       flex: 1,
       child: Container(
@@ -15,13 +18,18 @@ class Display extends StatelessWidget {
         child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.end,
-            children: const [
-              Text(
-                '7',
-                style:
-                    TextStyle(fontSize: 30, color: MyColors.scaffoldLigthColor),
+            children: [
+              Obx(
+                () => Text(
+                  buttonController.answerText.value,
+                  softWrap: true,
+                  textDirection: TextDirection.rtl,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontSize: 30, color: MyColors.scaffoldLigthColor),
+                ),
               ),
-              Text(
+              const Text(
                 '758',
                 style:
                     TextStyle(fontSize: 30, color: MyColors.scaffoldLigthColor),
