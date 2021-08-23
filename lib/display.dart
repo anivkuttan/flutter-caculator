@@ -15,26 +15,29 @@ class Display extends StatelessWidget {
         width: double.infinity,
         color: MyColors.scaffoldDark2Color,
         alignment: Alignment.bottomRight,
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Obx(
-                () => Text(
-                  buttonController.answerText.value,
-                  softWrap: true,
-                  textDirection: TextDirection.rtl,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Obx(
+                  () => Text(
+                    buttonController.answerText.value,
+                    softWrap: true,
+                    textDirection: TextDirection.rtl,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                        fontSize: 30, color: MyColors.scaffoldLigthColor),
+                  ),
+                ),
+                const Text(
+                  '758',
+                  style: TextStyle(
                       fontSize: 30, color: MyColors.scaffoldLigthColor),
                 ),
-              ),
-              const Text(
-                '758',
-                style:
-                    TextStyle(fontSize: 30, color: MyColors.scaffoldLigthColor),
-              ),
-            ]),
+              ]),
+        ),
       ),
     );
   }

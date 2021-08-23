@@ -4,6 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import 'controller.dart';
 import 'package:get/get.dart';
 
+enum ButtonType {
+  numberButton,
+  operatorButton,
+  allClearButton,
+  equalButton,
+  clearButton
+}
+
 class Button extends StatelessWidget {
   final String buttonName;
 
@@ -12,8 +20,9 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ButtonController buttonController = Get.find();
-    TextStyle buttonStyle = _getButtonStyle(buttonName);
-    Color buttonColor = _getbuttonColor(buttonName);
+    ButtonType buttonType = getButtonType(buttonName);
+    Color buttonTextColor = _getButtonTextColor(buttonType);
+    Color buttonColor = _getbuttonColor(buttonType);
     return Flexible(
       child: GestureDetector(
         onTap: () {
@@ -32,86 +41,64 @@ class Button extends StatelessWidget {
           alignment: Alignment.center,
           child: Text(
             buttonName,
-            style: buttonStyle,
+            style: GoogleFonts.dosis(
+                fontSize: 30,
+                fontWeight: FontWeight.w600,
+                color: buttonTextColor),
           ),
         ),
       ),
     );
   }
 
-  Color _getbuttonColor(String buttonName) {
-    switch (buttonName) {
-      case '+':
-      case '-':
-      case 'x':
-      case '/':
-      case '⌫':
-      case '%':
+  Color _getbuttonColor(ButtonType buttonType) {
+    switch (buttonType) {
+      case ButtonType.operatorButton:
         return MyColors.operatorButtonColor;
-      case 'AC':
+      case ButtonType.allClearButton:
         return MyColors.deleteButtonColor;
-      case '=':
+      case ButtonType.equalButton:
         return MyColors.equalButtonColor;
+      case ButtonType.numberButton:
+        return MyColors.normalButtonColor;
+      case ButtonType.clearButton:
+        return MyColors.operatorButtonColor;
       default:
         return MyColors.normalButtonColor;
     }
   }
 
-  Color _getButtonTextColor(String buttonName) {
-    switch (buttonName) {
-      case '+':
-      case '-':
-      case 'x':
-      case '/':
-      case '⌫':
-      case '%':
+  Color _getButtonTextColor(ButtonType buttonType) {
+    switch (buttonType) {
+      case ButtonType.operatorButton:
         return MyColors.operatorButtonTextColor;
-      case 'AC':
+      case ButtonType.allClearButton:
         return MyColors.deleteButtonTextColor;
-      case '=':
+      case ButtonType.equalButton:
         return MyColors.equalButtonTextColor;
+      case ButtonType.clearButton:
+        return MyColors.operatorButtonTextColor;
       default:
         return MyColors.normalButtonTextColor;
     }
   }
 
-  TextStyle _getButtonStyle(String buttonName) {
-    Color buttonTextColor = _getButtonTextColor(buttonName);
-
+  ButtonType getButtonType(String buttonName) {
     switch (buttonName) {
       case '+':
       case '-':
       case 'x':
       case '/':
-      case '⌫':
       case '%':
-        return GoogleFonts.dosis(
-          textStyle: TextStyle(
-              fontSize: 30,
-              color: buttonTextColor,
-              fontWeight: FontWeight.w600),
-        );
+        return ButtonType.operatorButton;
       case 'AC':
-        return GoogleFonts.dosis(
-          textStyle: TextStyle(
-              fontSize: 30,
-              color: buttonTextColor,
-              fontWeight: FontWeight.w600),
-        );
+        return ButtonType.allClearButton;
+      case '⌫':
+        return ButtonType.clearButton;
       case '=':
-        return GoogleFonts.dosis(
-          textStyle: TextStyle(
-              fontSize: 40,
-              color: buttonTextColor,
-              fontWeight: FontWeight.w600),
-        );
+        return ButtonType.equalButton;
       default:
-        return GoogleFonts.dosis(
-          textStyle: TextStyle(
-              fontSize: 30,
-              color: buttonTextColor,
-              fontWeight: FontWeight.w600),
-        );
+        return ButtonType.numberButton;
     }
   }
 }
