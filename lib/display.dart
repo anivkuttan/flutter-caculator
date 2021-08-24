@@ -21,21 +21,22 @@ class Display extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Obx(
-                  () => Text(
-                    buttonController.answerText.value,
-                    softWrap: true,
+               const Text(
+                 '0',
+                  style:  TextStyle(
+                      fontSize: 30, color: MyColors.scaffoldLigthColor),
+                ),
+                Obx(() {
+                  bool displayZero = buttonController.answerText.value.isEmpty;
+                  return Text(
+                    displayZero ? '0' : buttonController.answerText.value,
+                    //softWrap: true,
                     textDirection: TextDirection.rtl,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
                         fontSize: 30, color: MyColors.scaffoldLigthColor),
-                  ),
-                ),
-                const Text(
-                  '758',
-                  style: TextStyle(
-                      fontSize: 30, color: MyColors.scaffoldLigthColor),
-                ),
+                  );
+                }),
               ]),
         ),
       ),

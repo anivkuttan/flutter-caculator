@@ -9,7 +9,8 @@ enum ButtonType {
   operatorButton,
   allClearButton,
   equalButton,
-  clearButton
+  backSpaceButton,
+  periodButton
 }
 
 class Button extends StatelessWidget {
@@ -26,7 +27,7 @@ class Button extends StatelessWidget {
     return Flexible(
       child: GestureDetector(
         onTap: () {
-          buttonController.buttonTapped(buttonName);
+          buttonController.buttonTapped(buttonName, buttonType);
         },
         child: Container(
           height: 50,
@@ -61,7 +62,7 @@ class Button extends StatelessWidget {
         return MyColors.equalButtonColor;
       case ButtonType.numberButton:
         return MyColors.normalButtonColor;
-      case ButtonType.clearButton:
+      case ButtonType.backSpaceButton:
         return MyColors.operatorButtonColor;
       default:
         return MyColors.normalButtonColor;
@@ -76,7 +77,7 @@ class Button extends StatelessWidget {
         return MyColors.deleteButtonTextColor;
       case ButtonType.equalButton:
         return MyColors.equalButtonTextColor;
-      case ButtonType.clearButton:
+      case ButtonType.backSpaceButton:
         return MyColors.operatorButtonTextColor;
       default:
         return MyColors.normalButtonTextColor;
@@ -93,10 +94,12 @@ class Button extends StatelessWidget {
         return ButtonType.operatorButton;
       case 'AC':
         return ButtonType.allClearButton;
-      case '⌫':
-        return ButtonType.clearButton;
+      case '<':
+        return ButtonType.backSpaceButton;
       case '=':
         return ButtonType.equalButton;
+      case '.':
+        return ButtonType.periodButton;
       default:
         return ButtonType.numberButton;
     }
