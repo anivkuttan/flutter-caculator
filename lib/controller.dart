@@ -16,7 +16,7 @@ class ButtonController extends GetxController {
     } else if (buttonType == ButtonType.equalButton) {
       return equalButtonClicked();
     } else if (buttonType == ButtonType.periodButton) {
-      return periodButtonClicked();
+      return periodButtonClicked(buttonName);
     }
   }
 
@@ -26,7 +26,12 @@ class ButtonController extends GetxController {
 
   void backSpaceButtonClicked() {
     int displayCharatorLength = answerText.value.length;
-    answerText.value = answerText.value.substring(0, displayCharatorLength - 1);
+    if (answerText.isEmpty) {
+      answerText.value =
+          answerText.value.substring(0, displayCharatorLength - 1);
+    } else {
+      return;
+    }
   }
 
   void numberButtonClicked(String buttonName) {
@@ -34,6 +39,16 @@ class ButtonController extends GetxController {
   }
 
   void operatorButtonClicked() {}
-  void periodButtonClicked() {}
+  void periodButtonClicked(String buttonName) {
+    bool isPeriodAppear = answerText.value.contains('.');
+    if (answerText.isEmpty) {
+      answerText.value = '0.';
+    } else if (answerText.isNotEmpty && !isPeriodAppear) {
+      answerText.value += buttonName;
+    } else {
+      return;
+    }
+  }
+
   void equalButtonClicked() {}
 }
