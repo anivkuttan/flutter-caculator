@@ -3,6 +3,8 @@ import 'button.dart';
 
 class ButtonController extends GetxController {
   RxString answerText = ''.obs;
+  bool operatorButtonPressed = false;
+  bool isDotAvailable = true;
 
   void buttonTapped(String buttonName, ButtonType buttonType) {
     if (buttonType == ButtonType.allClearButton) {
@@ -12,7 +14,7 @@ class ButtonController extends GetxController {
     } else if (buttonType == ButtonType.numberButton) {
       return numberButtonClicked(buttonName);
     } else if (buttonType == ButtonType.operatorButton) {
-      return operatorButtonClicked();
+      return operatorButtonClicked(buttonName);
     } else if (buttonType == ButtonType.equalButton) {
       return equalButtonClicked();
     } else if (buttonType == ButtonType.periodButton) {
@@ -22,13 +24,13 @@ class ButtonController extends GetxController {
 
   void allClearButtonClicked() {
     answerText.value = '';
+    isDotAvailable = true;
   }
 
   void backSpaceButtonClicked() {
-    int displayCharatorLength = answerText.value.length;
-    if (answerText.isEmpty) {
-      answerText.value =
-          answerText.value.substring(0, displayCharatorLength - 1);
+    int answerTextLength = answerText.value.length;
+    if (answerText.isNotEmpty) {
+      answerText.value = answerText.value.substring(0, answerTextLength - 1);
     } else {
       return;
     }
@@ -38,13 +40,23 @@ class ButtonController extends GetxController {
     answerText.value += buttonName;
   }
 
-  void operatorButtonClicked() {}
+  void operatorButtonClicked(String buttonName) {
+    answerText.value += buttonName;
+    isDotAvailable = true; //dot is Available when operator is pressed
+  }
+
   void periodButtonClicked(String buttonName) {
-    bool isPeriodAppear = answerText.value.contains('.');
+    //Dot is Available is once (oneClick)
+    // after the operator pressed then Dot is Available once(oneClick)
+    // to change the State when Operator ButtonClicked
+
+    bool isEndsWithPeriod = answerText.endsWith('.');
     if (answerText.isEmpty) {
       answerText.value = '0.';
-    } else if (answerText.isNotEmpty && !isPeriodAppear) {
-      answerText.value += buttonName;
+      isDotAvailable = false; //chenging the state
+    } else if (!isEndsWithPeriod && isDotAvailable) {
+      answerText.value += '.';
+      isDotAvailable = false;
     } else {
       return;
     }

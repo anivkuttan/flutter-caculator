@@ -32,7 +32,7 @@ class Display extends StatelessWidget {
                     displayZero ? '0' : buttonController.answerText.value,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                        fontSize: 30, color: MyColors.scaffoldLigthColor),
+                        fontSize: 45, color: MyColors.scaffoldLigthColor),
                   );
                 }),
               ]),
