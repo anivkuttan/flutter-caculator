@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
+// import 'package:flutter/material.dart';
 import 'button.dart';
 
 class ButtonController extends GetxController {
   RxString answerText = ''.obs;
-  bool operatorButtonPressed = false;
+  bool isOperatorAvailable = true;
   bool isDotAvailable = true;
 
   void buttonTapped(String buttonName, ButtonType buttonType) {
@@ -30,7 +31,14 @@ class ButtonController extends GetxController {
   void backSpaceButtonClicked() {
     int answerTextLength = answerText.value.length;
     if (answerText.isNotEmpty) {
-      answerText.value = answerText.value.substring(0, answerTextLength - 1);
+      //Checking last deleted thing  it is Dot then change the State of isDotAvailable
+      bool isEndsWithPeriod = answerText.endsWith('.');
+      if (isEndsWithPeriod) {
+        answerText.value = answerText.value.substring(0, answerTextLength - 1);
+        isDotAvailable = true;
+      } else {
+        answerText.value = answerText.value.substring(0, answerTextLength - 1);
+      }
     } else {
       return;
     }
@@ -38,18 +46,35 @@ class ButtonController extends GetxController {
 
   void numberButtonClicked(String buttonName) {
     answerText.value += buttonName;
+    isOperatorAvailable = true;
   }
 
   void operatorButtonClicked(String buttonName) {
-    answerText.value += buttonName;
-    isDotAvailable = true; //dot is Available when operator is pressed
+    var isPluse = answerText.endsWith('+');
+    var isMinus = answerText.endsWith('-');
+    var isMultiplay = answerText.endsWith('x');
+    var isDevide = answerText.endsWith('/');
+
+    if (isOperatorAvailable) {
+      answerText.value += buttonName;
+      isOperatorAvailable = false;
+    } else if (!isOperatorAvailable &&
+        (isPluse || isMinus || isMultiplay || isDevide)) {
+      int start = answerText.value.length - 1;
+      int end = answerText.value.length;
+      answerText.value = answerText.value.replaceRange(start, end, buttonName);
+    } else {
+      return;
+    }
+    //when operator is clicked the dot become available
+    isDotAvailable = true;
   }
 
   void periodButtonClicked(String buttonName) {
-    //Dot is Available is once (oneClick)
-    // after the operator pressed then Dot is Available once(oneClick)
-    // to change the State when Operator ButtonClicked
-
+    /*Dot is Available is once (oneClick)
+      after the operator pressed then Dot is Available  at oneClick
+       to change the State when Operator ButtonClicked
+    */
     bool isEndsWithPeriod = answerText.endsWith('.');
     if (answerText.isEmpty) {
       answerText.value = '0.';
@@ -57,6 +82,7 @@ class ButtonController extends GetxController {
     } else if (!isEndsWithPeriod && isDotAvailable) {
       answerText.value += '.';
       isDotAvailable = false;
+      isOperatorAvailable = true;
     } else {
       return;
     }
