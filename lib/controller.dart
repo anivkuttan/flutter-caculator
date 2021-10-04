@@ -1,31 +1,37 @@
 import 'package:get/get.dart';
-// import 'package:flutter/material.dart';
 import 'button.dart';
 
 class ButtonController extends GetxController {
   RxString answerText = ''.obs;
   bool isOperatorAvailable = true;
   bool isDotAvailable = true;
+  bool isEndWithOperator = false;
+  var isLastOpeatorPressend = false;
 
   void buttonTapped(String buttonName, ButtonType buttonType) {
-    if (buttonType == ButtonType.allClearButton) {
-      return allClearButtonClicked();
-    } else if (buttonType == ButtonType.backSpaceButton) {
-      return backSpaceButtonClicked();
-    } else if (buttonType == ButtonType.numberButton) {
-      return numberButtonClicked(buttonName);
-    } else if (buttonType == ButtonType.operatorButton) {
-      return operatorButtonClicked(buttonName);
-    } else if (buttonType == ButtonType.equalButton) {
-      return equalButtonClicked();
-    } else if (buttonType == ButtonType.periodButton) {
-      return periodButtonClicked(buttonName);
+    switch (buttonType) {
+      case ButtonType.allClearButton:
+        return allClearButtonClicked();
+      case ButtonType.backSpaceButton:
+        return backSpaceButtonClicked();
+      case ButtonType.periodButton:
+        return periodButtonClicked(buttonName);
+      case ButtonType.numberButton:
+        return numberButtonClicked(buttonName);
+      case ButtonType.equalButton:
+        return equalButtonClicked();
+      case ButtonType.operatorButton:
+        return operatorButtonClicked(buttonName);
+      default:
+        return;
     }
   }
 
   void allClearButtonClicked() {
     answerText.value = '';
     isDotAvailable = true;
+    isEndWithOperator = false;
+    isLastOpeatorPressend = false;
   }
 
   void backSpaceButtonClicked() {
@@ -38,6 +44,7 @@ class ButtonController extends GetxController {
         isDotAvailable = true;
       } else {
         answerText.value = answerText.value.substring(0, answerTextLength - 1);
+        isOperatorAvailable = true;
       }
     } else {
       return;
@@ -46,28 +53,53 @@ class ButtonController extends GetxController {
 
   void numberButtonClicked(String buttonName) {
     answerText.value += buttonName;
-    isOperatorAvailable = true;
   }
 
   void operatorButtonClicked(String buttonName) {
-    var isPluse = answerText.endsWith('+');
-    var isMinus = answerText.endsWith('-');
-    var isMultiplay = answerText.endsWith('x');
-    var isDevide = answerText.endsWith('/');
-
-    if (isOperatorAvailable) {
+    int answerLength = answerText.value.length;
+    var isEndWithMinus = answerText.value.endsWith('-');
+    var isEndWithPluse = answerText.value.endsWith('+');
+    var isEndWithMultiplay = answerText.value.endsWith('x');
+    var isEndWithDivide = answerText.value.endsWith('/');
+    var isOpeatorOne = RegExp(r'[+-]');
+    if (answerText.isEmpty && (buttonName == '+' || buttonName == '-')) {
+      answerText.value = buttonName;
+    } else if (answerLength == 1 && answerText.contains(isOpeatorOne)) {
+      if (buttonName == '+') {
+        answerText.value = '+';
+      } else if (buttonName == '-') {
+        answerText.value = '-';
+      }
+    } else if (answerText.isNotEmpty &&
+        !(isEndWithMinus ||
+            isEndWithPluse ||
+            isEndWithMultiplay ||
+            isEndWithDivide)) {
       answerText.value += buttonName;
-      isOperatorAvailable = false;
-    } else if (!isOperatorAvailable &&
-        (isPluse || isMinus || isMultiplay || isDevide)) {
-      int start = answerText.value.length - 1;
-      int end = answerText.value.length;
-      answerText.value = answerText.value.replaceRange(start, end, buttonName);
+      isEndWithOperator = true;
+    } else if (answerText.isNotEmpty &&
+        (isEndWithMinus ||
+            isEndWithPluse ||
+            isEndWithMultiplay ||
+            isEndWithDivide)) {
+      if (buttonName == 'x' || buttonName == '/' || buttonName == '+') {
+        if (isLastOpeatorPressend) {
+          var delString = answerText.value.substring(0, answerLength - 2);
+          var addedString = delString + buttonName;
+          answerText.value = addedString;
+          isLastOpeatorPressend = false;
+        } else {
+          var delString = answerText.value.substring(0, answerLength - 1);
+          var addedString = delString + buttonName;
+          answerText.value = addedString;
+        }
+      } else if (buttonName == '-' && !isLastOpeatorPressend) {
+        answerText.value += buttonName;
+        isLastOpeatorPressend = true;
+      }
     } else {
       return;
     }
-    //when operator is clicked the dot become available
-    isDotAvailable = true;
   }
 
   void periodButtonClicked(String buttonName) {

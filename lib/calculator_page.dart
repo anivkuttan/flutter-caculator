@@ -11,12 +11,12 @@ class CalcualtorPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: MyColors.scaffoldDarkColor,
-      appBar: AppBar(
-        backgroundColor: MyColors.scaffoldDarkColor,
-        title: const Text('Calculator'),
-        elevation: 0.0,
-        centerTitle: true,
-      ),
+      // appBar: AppBar(
+      //   backgroundColor: MyColors.scaffoldDarkColor,
+      //   title: const Text('Calculator'),
+      //   elevation: 0.0,
+      //   centerTitle: true,
+      // ),
       body: Column(
         children: const [
           Display(),
