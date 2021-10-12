@@ -1,8 +1,10 @@
 import 'package:get/get.dart';
+import 'package:math_expressions/math_expressions.dart';
 import 'button.dart';
 
 class ButtonController extends GetxController {
   RxString answerText = ''.obs;
+  RxString topString = ''.obs;
   bool isOperatorAvailable = true;
   bool isDotAvailable = true;
   bool isEndWithOperator = false;
@@ -32,6 +34,7 @@ class ButtonController extends GetxController {
     isDotAvailable = true;
     isEndWithOperator = false;
     isLastOpeatorPressend = false;
+    topString.value = '';
   }
 
   void backSpaceButtonClicked() {
@@ -56,11 +59,12 @@ class ButtonController extends GetxController {
   }
 
   void operatorButtonClicked(String buttonName) {
+    isDotAvailable = true;
     int answerLength = answerText.value.length;
     var isEndWithMinus = answerText.value.endsWith('-');
     var isEndWithPluse = answerText.value.endsWith('+');
     var isEndWithMultiplay = answerText.value.endsWith('x');
-    var isEndWithDivide = answerText.value.endsWith('/');
+    var isEndWithDivide = answerText.value.endsWith('÷');
     var isOpeatorOne = RegExp(r'[+-]');
     if (answerText.isEmpty && (buttonName == '+' || buttonName == '-')) {
       answerText.value = buttonName;
@@ -77,12 +81,13 @@ class ButtonController extends GetxController {
             isEndWithDivide)) {
       answerText.value += buttonName;
       isEndWithOperator = true;
+      isLastOpeatorPressend = false;
     } else if (answerText.isNotEmpty &&
         (isEndWithMinus ||
             isEndWithPluse ||
             isEndWithMultiplay ||
             isEndWithDivide)) {
-      if (buttonName == 'x' || buttonName == '/' || buttonName == '+') {
+      if (buttonName == 'x' || buttonName == '÷' || buttonName == '+') {
         if (isLastOpeatorPressend) {
           var delString = answerText.value.substring(0, answerLength - 2);
           var addedString = delString + buttonName;
@@ -92,6 +97,7 @@ class ButtonController extends GetxController {
           var delString = answerText.value.substring(0, answerLength - 1);
           var addedString = delString + buttonName;
           answerText.value = addedString;
+          isLastOpeatorPressend = false;
         }
       } else if (buttonName == '-' && !isLastOpeatorPressend) {
         answerText.value += buttonName;
@@ -120,5 +126,21 @@ class ButtonController extends GetxController {
     }
   }
 
-  void equalButtonClicked() {}
+  void equalButtonClicked() {
+    var isDevide = answerText.value.contains(RegExp(r'[÷]'));
+    var finalText1 = answerText.value.replaceAll('x', '*');
+    var finalText2 = answerText.value.replaceAll('÷', '/');
+    var replacedAnswerText = isDevide ? finalText2 : finalText1;
+
+    try {
+      Parser parser = Parser();
+      Expression expression = parser.parse(replacedAnswerText);
+      ContextModel cm = ContextModel();
+      double evalvation = expression.evaluate(EvaluationType.REAL, cm);
+      topString.value = evalvation.toString();
+    } catch (e) {
+      topString.value = 'Syntext Error';
+      // topString.value = e.toString();
+    }
+  }
 }

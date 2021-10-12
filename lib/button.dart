@@ -24,31 +24,39 @@ class Button extends StatelessWidget {
     ButtonType buttonType = getButtonType(buttonName);
     Color buttonTextColor = _getButtonTextColor(buttonType);
     Color buttonColor = _getbuttonColor(buttonType);
+    BorderRadius border = const BorderRadius.all(
+      Radius.circular(20),
+    );
+    // bool isButtonPressed = false;
     return Flexible(
-      child: GestureDetector(
-        onTap: () {
-          buttonController.buttonTapped(buttonName, buttonType);
-        },
-        child: Container(
-          height: 50,
-          width: 60,
-          margin: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: buttonColor,
-            borderRadius: const BorderRadius.all(
-              Radius.circular(20),
+      child: Material(
+        color: buttonColor,
+        borderRadius: border,
+        child: InkWell(
+          splashColor: Colors.grey[700],
+          borderRadius: border,
+          // hoverColor: Colors.yellow,
+          onTapDown: (d) {},
+          onTap: () {
+            buttonController.buttonTapped(buttonName, buttonType);
+          },
+          child: Container(
+            height: 50,
+            width: 60,
+            margin: const EdgeInsets.all(10),
+            alignment: Alignment.center,
+            child: AnimatedDefaultTextStyle(
+              duration: const Duration(seconds: 1),
+              child: Text(buttonName,),
+              style: GoogleFonts.dosis(
+                  fontSize: 30,
+                  fontWeight: FontWeight.w600,
+                  color: buttonTextColor),
             ),
-          ),
-          alignment: Alignment.center,
-          child: Text(
-            buttonName,
-            style: GoogleFonts.dosis(
-                fontSize: 30,
-                fontWeight: FontWeight.w600,
-                color: buttonTextColor),
           ),
         ),
       ),
+      //  ),
     );
   }
 
@@ -89,7 +97,7 @@ class Button extends StatelessWidget {
       case '+':
       case '-':
       case 'x':
-      case '/':
+      case '÷':
       case '%':
         return ButtonType.operatorButton;
       case 'AC':
@@ -105,5 +113,3 @@ class Button extends StatelessWidget {
     }
   }
 }
- 
- 
